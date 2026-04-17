@@ -13,16 +13,37 @@ export function PaperPanel() {
   return (
     <AnimatePresence>
       {paper && (
-        <motion.aside
-          key={paper.id}
-          initial={{ x: 40, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: 40, opacity: 0 }}
-          transition={{ type: 'spring', stiffness: 220, damping: 26 }}
-          className="panel m-4 ml-0 w-[380px] flex-none overflow-y-auto relative"
-        >
-          <Inner paper={paper} onClose={() => select(null)} />
-        </motion.aside>
+        <>
+          <motion.div
+            key={`${paper.id}-backdrop`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden fixed inset-0 bg-black/50 z-30"
+            onClick={() => select(null)}
+          />
+          <motion.aside
+            key={paper.id}
+            initial={{ y: '100%', opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: '100%', opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 240, damping: 28 }}
+            className="md:hidden panel fixed inset-x-0 bottom-0 z-40 max-h-[85vh] overflow-y-auto rounded-b-none rounded-t-[20px]"
+          >
+            <Inner paper={paper} onClose={() => select(null)} />
+          </motion.aside>
+          <motion.aside
+            key={`${paper.id}-desktop`}
+            initial={{ x: 40, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: 40, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 220, damping: 26 }}
+            className="hidden md:block panel m-4 ml-0 w-[380px] flex-none overflow-y-auto relative"
+          >
+            <Inner paper={paper} onClose={() => select(null)} />
+          </motion.aside>
+        </>
       )}
     </AnimatePresence>
   );

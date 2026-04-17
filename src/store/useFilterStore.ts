@@ -14,6 +14,7 @@ import { YEAR_MAX, YEAR_MIN } from '../data/taxonomy';
 interface Store extends FilterState {
   selectedId: string | null;
   layout: LayoutMode;
+  sidebarOpen: boolean;
   toggle: {
     representation: (v: Representation) => void;
     input: (v: InputModality) => void;
@@ -26,6 +27,7 @@ interface Store extends FilterState {
   setMode: (m: FilterMode) => void;
   select: (id: string | null) => void;
   setLayout: (m: LayoutMode) => void;
+  setSidebarOpen: (v: boolean) => void;
   clearAll: () => void;
 }
 
@@ -51,6 +53,7 @@ export const useFilterStore = create<Store>((set) => ({
   ...empty(),
   selectedId: null,
   layout: 'force',
+  sidebarOpen: false,
   toggle: {
     representation: (v) =>
       set((s) => ({ representation: toggleSet(s.representation, v) })),
@@ -64,6 +67,7 @@ export const useFilterStore = create<Store>((set) => ({
   setMode: (m) => set({ mode: m }),
   select: (id) => set({ selectedId: id }),
   setLayout: (m) => set({ layout: m }),
+  setSidebarOpen: (v) => set({ sidebarOpen: v }),
   clearAll: () =>
     set((s) => ({ ...empty(), mode: s.mode, selectedId: null })),
 }));

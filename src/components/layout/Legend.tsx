@@ -3,7 +3,7 @@ import { AXES } from '../../data/taxonomy';
 
 export function Legend() {
   return (
-    <div className="pointer-events-none absolute right-4 top-4 panel px-3 py-2.5 text-[11px]">
+    <div className="hidden sm:block pointer-events-none absolute right-4 top-4 panel px-3 py-2.5 text-[11px]">
       <div className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-white/50 mb-1.5">
         Node fill · Representation
       </div>

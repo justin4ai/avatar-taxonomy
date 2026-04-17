@@ -6,6 +6,8 @@ import { hasAnyFilter } from '../../lib/filter';
 import { X } from 'lucide-react';
 import clsx from 'clsx';
 import type { FilterMode } from '../../types';
+import { ALL_PAPERS as PAPERS } from '../../data';
+import { matchesFilter } from '../../lib/filter';
 
 export function FilterSidebar() {
   const store = useFilterStore();
@@ -30,13 +32,25 @@ export function FilterSidebar() {
   }
 
   const dirty = hasAnyFilter(store);
+  const count = PAPERS.filter((p) => matchesFilter(p, store)).length;
+  const open = store.sidebarOpen;
 
   return (
-    <aside className="panel m-4 p-5 w-[300px] flex-none flex flex-col gap-1 overflow-y-auto">
+    <aside
+      className={clsx(
+        'panel flex flex-col gap-1 overflow-y-auto',
+        'md:m-4 md:p-5 md:w-[300px] md:flex-none md:static md:translate-x-0',
+        'fixed left-0 top-0 bottom-0 z-40 w-[86vw] max-w-[340px] p-5 rounded-none md:rounded-[14px] transition-transform duration-300',
+        open ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
+      )}
+    >
       <div className="flex items-center gap-2 mb-4">
         <div className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-white/80">
           Filters
         </div>
+        <span className="md:hidden font-mono text-[10px] text-white/40">
+          · {count} / {PAPERS.length}
+        </span>
         {dirty && (
           <button
             onClick={() => store.clearAll()}
@@ -46,6 +60,17 @@ export function FilterSidebar() {
             <X size={11} /> clear
           </button>
         )}
+        <button
+          onClick={() => store.setSidebarOpen(false)}
+          className={clsx(
+            'md:hidden p-1 rounded-md text-white/60 hover:text-white hover:bg-white/10 transition',
+            dirty ? '' : 'ml-auto',
+          )}
+          title="Close"
+          aria-label="Close filters"
+        >
+          <X size={14} />
+        </button>
       </div>
       <ModeSwitch mode={store.mode} onChange={store.setMode} />
       {AXES.map((axis) => (

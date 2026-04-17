@@ -1,4 +1,4 @@
-import { Search, Network, GitBranch } from 'lucide-react';
+import { Search, Network, GitBranch, Menu } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useFilterStore } from '../../store/useFilterStore';
 import { ALL_PAPERS as PAPERS } from '../../data';
@@ -26,10 +26,18 @@ export function TopBar() {
   }, []);
 
   return (
-    <header className="flex items-center gap-4 px-5 py-3 border-b border-white/5">
+    <header className="flex items-center gap-2 sm:gap-4 px-3 sm:px-5 py-3 border-b border-white/5">
+      <button
+        onClick={() => store.setSidebarOpen(true)}
+        className="md:hidden p-1.5 rounded-md text-white/70 hover:text-white hover:bg-white/10 transition"
+        title="Filters"
+        aria-label="Open filters"
+      >
+        <Menu size={18} />
+      </button>
       <Logo />
-      <div className="h-5 w-px bg-white/10" />
-      <div className="flex items-center gap-3">
+      <div className="hidden md:block h-5 w-px bg-white/10" />
+      <div className="hidden md:flex items-center gap-3">
         <div className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-white/55">
           3D Avatar Taxonomy
         </div>
@@ -38,7 +46,7 @@ export function TopBar() {
         </div>
       </div>
 
-      <div className="relative ml-auto w-[320px] max-w-[40vw]">
+      <div className="relative ml-auto flex-1 sm:flex-none sm:w-[320px] max-w-[420px]">
         <Search
           size={14}
           className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40"
@@ -47,10 +55,10 @@ export function TopBar() {
           ref={inputRef}
           value={store.query}
           onChange={(e) => store.setQuery(e.target.value)}
-          placeholder="Search papers, authors, 3DGS, relightable…"
-          className="w-full bg-white/[0.04] border border-white/8 rounded-lg pl-8 pr-10 py-1.5 text-[13px] placeholder:text-white/30 focus:outline-none focus:border-cyan-400/40 focus:ring-1 focus:ring-cyan-400/30 transition"
+          placeholder="Search…"
+          className="w-full bg-white/[0.04] border border-white/8 rounded-lg pl-8 pr-8 sm:pr-10 py-1.5 text-[13px] placeholder:text-white/30 focus:outline-none focus:border-cyan-400/40 focus:ring-1 focus:ring-cyan-400/30 transition"
         />
-        <kbd className="kbd absolute right-2 top-1/2 -translate-y-1/2">/</kbd>
+        <kbd className="kbd absolute right-2 top-1/2 -translate-y-1/2 hidden sm:inline-flex">/</kbd>
       </div>
 
       <LayoutToggle value={store.layout} onChange={store.setLayout} />
@@ -72,7 +80,7 @@ function Logo() {
         />
         <div className="absolute inset-0 rounded-md ring-1 ring-white/20" />
       </div>
-      <div className="leading-tight">
+      <div className="leading-tight hidden sm:block">
         <div className="text-[13.5px] font-semibold tracking-tight">
           Avatar Atlas
         </div>
@@ -96,20 +104,20 @@ function LayoutToggle({
     { id: 'tree', label: 'Tree', icon: GitBranch },
   ];
   return (
-    <div className="flex items-center gap-0.5 p-0.5 bg-white/[0.03] border border-white/8 rounded-lg">
+    <div className="flex items-center gap-0.5 p-0.5 bg-white/[0.03] border border-white/8 rounded-lg flex-none">
       {items.map(({ id, label, icon: Icon }) => (
         <button
           key={id}
           onClick={() => onChange(id)}
           className={clsx(
-            'flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11.5px] font-medium transition',
+            'flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-md text-[11.5px] font-medium transition',
             value === id
               ? 'bg-white/10 text-white'
               : 'text-white/50 hover:text-white hover:bg-white/5',
           )}
         >
           <Icon size={12} />
-          {label}
+          <span className="hidden sm:inline">{label}</span>
         </button>
       ))}
     </div>

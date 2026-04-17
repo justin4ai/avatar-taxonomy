@@ -1,7 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import { Shell } from './components/layout/Shell';
 import { TaxonomyGraph } from './components/graph/TaxonomyGraph';
 import { TreeMode } from './components/modes/TreeMode';
+import { Landing } from './components/landing/Landing';
 import { useFilterStore } from './store/useFilterStore';
 import { filterToHash, parseHash } from './lib/hash';
 import type {
@@ -14,6 +16,10 @@ import type {
 
 function App() {
   const store = useFilterStore();
+  const [showLanding, setShowLanding] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    return sessionStorage.getItem('atlas.entered') !== '1';
+  });
 
   useEffect(() => {
     const { filter, selected, layout } = parseHash(window.location.hash);
@@ -57,17 +63,42 @@ function App() {
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape' && store.selectedId) store.select(null);
+      if (e.key === 'Escape') {
+        if (store.sidebarOpen) store.setSidebarOpen(false);
+        else if (store.selectedId) store.select(null);
+      }
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [store.selectedId, store.select]);
+  }, [store.selectedId, store.select, store.sidebarOpen, store.setSidebarOpen]);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    const onChange = () => {
+      if (mq.matches && store.sidebarOpen) store.setSidebarOpen(false);
+    };
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, [store.sidebarOpen, store.setSidebarOpen]);
 
   return (
-    <Shell>
-      {store.layout === 'force' && <TaxonomyGraph />}
-      {store.layout === 'tree' && <TreeMode />}
-    </Shell>
+    <>
+      <Shell>
+        {store.layout === 'force' && <TaxonomyGraph />}
+        {store.layout === 'tree' && <TreeMode />}
+      </Shell>
+      <AnimatePresence>
+        {showLanding && (
+          <Landing
+            key="landing"
+            onEnter={() => {
+              sessionStorage.setItem('atlas.entered', '1');
+              setShowLanding(false);
+            }}
+          />
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
