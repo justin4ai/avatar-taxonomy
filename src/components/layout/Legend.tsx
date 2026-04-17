@@ -1,5 +1,5 @@
 import { INPUT_COLOR, REP_COLOR } from '../../lib/colors';
-import { AXES } from '../../data/taxonomy';
+import { AXES } from '../../data/axes';
 
 export function Legend() {
   return (

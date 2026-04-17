@@ -39,7 +39,7 @@ export function TopBar() {
       <div className="hidden md:block h-5 w-px bg-white/10" />
       <div className="hidden md:flex items-center gap-3">
         <div className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-white/55">
-          3D Avatar Taxonomy
+          3D Avatar Atlas
         </div>
         <div className="font-mono text-[10px] text-white/35">
           {count} / {PAPERS.length} papers

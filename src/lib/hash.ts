@@ -1,5 +1,5 @@
 import type { FilterState } from '../types';
-import { YEAR_MAX, YEAR_MIN } from '../data/taxonomy';
+import { YEAR_MAX, YEAR_MIN } from '../data/axes';
 
 export interface HashState {
   filter: Partial<{

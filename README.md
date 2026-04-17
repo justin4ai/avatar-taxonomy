@@ -1,16 +1,16 @@
 <p align="center">
-  <img src="assets/avatar-taxonomy-logo.png" alt="Avatar Taxonomy" width="560" />
+  <img src="assets/avatar-taxonomy-logo.png" alt="Avatar Atlas" width="560" />
 </p>
 
 <p align="center">
   <a href="https://avatar-taxonomy.vercel.app">
-    <img src="https://img.shields.io/badge/AVATAR_TAXONOMY-22d3ee?style=for-the-badge&labelColor=0a0a10&logo=vercel&logoColor=white" alt="AVATAR TAXONOMY" />
+    <img src="https://img.shields.io/badge/AVATAR_ATLAS-22d3ee?style=for-the-badge&labelColor=0a0a10&logo=vercel&logoColor=white" alt="AVATAR ATLAS" />
   </a>
 </p>
 
-# 3D Avatar Atlas — Taxonomy
+# 3D Avatar Atlas
 
-Welcome to the **Avatar Taxonomy**, an interactive map of research on 3D human
+Welcome to the **Avatar Atlas**, an interactive map of research on 3D human
 avatars. The atlas covers NeRF, 3D Gaussian Splatting, mesh-based avatars,
 parametric body/face/hand priors, relightable and animatable humans, and the
 methods that connect them.

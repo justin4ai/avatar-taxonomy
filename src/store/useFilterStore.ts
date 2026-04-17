@@ -9,7 +9,7 @@ import type {
   Representation,
   Target,
 } from '../types';
-import { YEAR_MAX, YEAR_MIN } from '../data/taxonomy';
+import { YEAR_MAX, YEAR_MIN } from '../data/axes';
 
 interface Store extends FilterState {
   selectedId: string | null;

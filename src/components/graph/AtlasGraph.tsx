@@ -9,7 +9,7 @@ import { useFilterStore } from '../../store/useFilterStore';
 type FGNode = GraphNode;
 type FGLink = GraphLink;
 
-export function TaxonomyGraph() {
+export function AtlasGraph() {
   const filter = useFilterStore();
   const hoverIdRef = useRef<string | null>(null);
   const [hoverId, setHoverId] = useState<string | null>(null);

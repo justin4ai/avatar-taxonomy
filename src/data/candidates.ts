@@ -444,7 +444,7 @@ export const CANDIDATES: Paper[] = [
     arxiv: 'https://arxiv.org/abs/2603.17131',
     summary:
       'Integrates 3DGS with the SMAL parametric animal model to produce editable, animatable single-image pet avatars with a multimodal editing suite.',
-    contribution: 'SMAL + 3DGS hybrid for single-image editable animal avatars — extends avatar taxonomy beyond humans.',
+    contribution: 'SMAL + 3DGS hybrid for single-image editable animal avatars — extends the atlas beyond humans.',
     representation: ['3dgs', 'mesh'],
     input: ['single_image'],
     pipeline: ['per_subject'],

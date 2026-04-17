@@ -1,4 +1,4 @@
-import { AXES } from '../../data/taxonomy';
+import { AXES } from '../../data/axes';
 import { useFilterStore } from '../../store/useFilterStore';
 import { AxisGroup } from './AxisGroup';
 import { YearRange } from './YearRange';

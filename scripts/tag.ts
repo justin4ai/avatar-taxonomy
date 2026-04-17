@@ -4,7 +4,7 @@ import type { ArxivCandidate, TaggedCandidate } from './schema';
 const client = new Anthropic();
 const MODEL = process.env.CLAUDE_MODEL ?? 'claude-haiku-4-5-20251001';
 
-const SYSTEM = `You tag 3D-avatar-research papers for a curated taxonomy.
+const SYSTEM = `You tag 3D-avatar-research papers for a curated atlas.
 
 Return STRICT JSON matching this exact schema:
 

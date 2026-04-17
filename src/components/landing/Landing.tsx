@@ -121,7 +121,7 @@ export function Landing({ onEnter }: Props) {
                   'linear-gradient(90deg, #22d3ee 0%, #a78bfa 55%, #e879f9 100%)',
               }}
             >
-              Taxonomy
+              Atlas
             </span>
           </motion.h1>
 

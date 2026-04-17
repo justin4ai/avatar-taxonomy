@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { Shell } from './components/layout/Shell';
-import { TaxonomyGraph } from './components/graph/TaxonomyGraph';
+import { AtlasGraph } from './components/graph/AtlasGraph';
 import { TreeMode } from './components/modes/TreeMode';
 import { Landing } from './components/landing/Landing';
 import { useFilterStore } from './store/useFilterStore';
@@ -84,7 +84,7 @@ function App() {
   return (
     <>
       <Shell>
-        {store.layout === 'force' && <TaxonomyGraph />}
+        {store.layout === 'force' && <AtlasGraph />}
         {store.layout === 'tree' && <TreeMode />}
       </Shell>
       <AnimatePresence>

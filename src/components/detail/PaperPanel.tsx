@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowUpRight, Code2, ExternalLink, X } from 'lucide-react';
 import { ALL_PAPERS as PAPERS } from '../../data';
 import { useFilterStore } from '../../store/useFilterStore';
-import { AXES, valueLabel } from '../../data/taxonomy';
+import { AXES, valueLabel } from '../../data/axes';
 import { rgba } from '../../lib/colors';
 import type { AxisId, Paper } from '../../types';
 

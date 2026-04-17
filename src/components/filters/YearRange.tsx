@@ -1,5 +1,5 @@
 import * as Slider from '@radix-ui/react-slider';
-import { YEAR_MAX, YEAR_MIN } from '../../data/taxonomy';
+import { YEAR_MAX, YEAR_MIN } from '../../data/axes';
 import { useFilterStore } from '../../store/useFilterStore';
 
 export function YearRange() {
