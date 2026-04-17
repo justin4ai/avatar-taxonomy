@@ -9,11 +9,15 @@ import type { Paper, Representation } from '../../types';
 
 const LANES: Representation[] = ['mesh', 'sdf', 'nerf', 'hybrid', '3dgs', 'points'];
 
-const PX_PER_YEAR = 230;
-const LANE_H = 150;
+const PX_PER_YEAR = 320;
+const LANE_H = 210;
 const PAD_X = 80;
-const PAD_Y = 64;
-const NODE_SLOT_Y = 22;
+const PAD_Y = 72;
+const NODE_SLOT_Y = 28;
+const MAX_TITLE_CHARS = 22;
+const CHAR_PX = 6.2;
+const LABEL_OFFSET_X = 6;
+const LABEL_PAD = 8;
 
 interface LaidOut {
   id: string;
@@ -23,6 +27,16 @@ interface LaidOut {
   lane: Representation;
   visible: boolean;
   r: number;
+  labelW: number;
+  shortTitle: string;
+  hideLabel: boolean;
+}
+
+function truncateTitle(title: string): string {
+  const t = title.split(':')[0];
+  return t.length > MAX_TITLE_CHARS
+    ? t.slice(0, MAX_TITLE_CHARS - 1) + '…'
+    : t;
 }
 
 function representativeLane(p: Paper): Representation {
@@ -39,15 +53,21 @@ function paperX(p: Paper): number {
 }
 
 function layout(papers: Paper[], visibleIds: Set<string>): LaidOut[] {
-  const nodes: LaidOut[] = papers.map((p) => ({
-    id: p.id,
-    paper: p,
-    x: paperX(p),
-    y: laneCenter(representativeLane(p)),
-    lane: representativeLane(p),
-    visible: visibleIds.has(p.id),
-    r: 4 + p.importance * 1.6,
-  }));
+  const nodes: LaidOut[] = papers.map((p) => {
+    const shortTitle = truncateTitle(p.title);
+    return {
+      id: p.id,
+      paper: p,
+      x: paperX(p),
+      y: laneCenter(representativeLane(p)),
+      lane: representativeLane(p),
+      visible: visibleIds.has(p.id),
+      r: 4 + p.importance * 1.6,
+      labelW: shortTitle.length * CHAR_PX + LABEL_OFFSET_X + LABEL_PAD,
+      shortTitle,
+      hideLabel: false,
+    };
+  });
 
   const laneBuckets = new Map<Representation, LaidOut[]>();
   for (const n of nodes) {
@@ -58,21 +78,39 @@ function layout(papers: Paper[], visibleIds: Set<string>): LaidOut[] {
   for (const arr of laneBuckets.values()) {
     arr.sort((a, b) => a.x - b.x);
     const placed: LaidOut[] = [];
+    const slots = [0, -1, 1, -2, 2, -3, 3];
     for (const n of arr) {
       const cy = laneCenter(n.lane);
-      const slots = [0, -1, 1, -2, 2, -3, 3, -4, 4];
-      let chosen = 0;
+      let chosen: number | null = null;
       for (const s of slots) {
         const y = cy + s * NODE_SLOT_Y;
         const overlaps = placed.some((p) => {
-          const dx = Math.abs(p.x - n.x);
-          const minDx = p.r + n.r + 42; // roughly label width
-          return Math.abs(p.y - y) < NODE_SLOT_Y && dx < minDx;
+          if (Math.abs(p.y - y) >= NODE_SLOT_Y) return false;
+          const pRight = p.x + p.r + (p.hideLabel ? 0 : p.labelW);
+          const nLeft = n.x - n.r - 2;
+          return pRight > nLeft;
         });
         if (!overlaps) {
           chosen = s;
           break;
         }
+      }
+      if (chosen == null) {
+        let best = 0;
+        let bestScore = Infinity;
+        for (const s of slots) {
+          const y = cy + s * NODE_SLOT_Y;
+          const score = placed.reduce((acc, p) => {
+            if (Math.abs(p.y - y) >= NODE_SLOT_Y) return acc;
+            return acc + Math.max(0, p.x + p.r - (n.x - n.r));
+          }, 0);
+          if (score < bestScore) {
+            bestScore = score;
+            best = s;
+          }
+        }
+        chosen = best;
+        n.hideLabel = true;
       }
       n.y = cy + chosen * NODE_SLOT_Y;
       placed.push(n);
@@ -291,6 +329,7 @@ export function TreeMode() {
                 onClick={() => filter.select(n.id)}
                 style={{ cursor: 'pointer', opacity: dim ? 0.25 : 1 }}
               >
+                <title>{n.paper.title}</title>
                 <circle
                   r={n.r + 4}
                   fill={rgba(color, 0.15)}
@@ -314,29 +353,33 @@ export function TreeMode() {
                     opacity={0.9}
                   />
                 )}
-                <text
-                  x={n.r + 6}
-                  y={3.5}
-                  fontSize={10.5}
-                  fontFamily="Inter, ui-sans-serif, system-ui, sans-serif"
-                  fill="rgba(240,240,255,0.92)"
-                  fontWeight={500}
-                >
-                  {n.paper.title.split(':')[0].length > 32
-                    ? n.paper.title.split(':')[0].slice(0, 30) + '…'
-                    : n.paper.title.split(':')[0]}
-                </text>
-                <text
-                  x={n.r + 6}
-                  y={15}
-                  fontSize={9}
-                  fontFamily="'JetBrains Mono', ui-monospace, monospace"
-                  fill="rgba(180,190,220,0.55)"
-                >
-                  {n.paper.year}
-                  {'·'}
-                  {String(paperMonth(n.paper)).padStart(2, '0')}
-                </text>
+                {(!n.hideLabel || hoverId === n.id) && (
+                  <>
+                    <text
+                      x={n.r + LABEL_OFFSET_X}
+                      y={3.5}
+                      fontSize={10.5}
+                      fontFamily="Inter, ui-sans-serif, system-ui, sans-serif"
+                      fill="rgba(240,240,255,0.92)"
+                      fontWeight={500}
+                    >
+                      {hoverId === n.id
+                        ? n.paper.title.split(':')[0]
+                        : n.shortTitle}
+                    </text>
+                    <text
+                      x={n.r + LABEL_OFFSET_X}
+                      y={15}
+                      fontSize={9}
+                      fontFamily="'JetBrains Mono', ui-monospace, monospace"
+                      fill="rgba(180,190,220,0.55)"
+                    >
+                      {n.paper.year}
+                      {'·'}
+                      {String(paperMonth(n.paper)).padStart(2, '0')}
+                    </text>
+                  </>
+                )}
               </g>
             );
           })}
